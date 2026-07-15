@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Control de Gastos</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="app">
+    <h1>Control de Gastos</h1>
+
+    <form id="expense-form">
+      <input type="text" id="expense-desc" placeholder="Descripción del gasto" required>
+      <input type="number" id="expense-amount" placeholder="Monto" required>
+      <button type="submit">Agregar</button>
+    </form>
+
+    <ul id="expense-list"></ul>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
