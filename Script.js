@@ -27,6 +27,7 @@ form.addEventListener('submit', (e) => {
 
   gastos.push(gasto);
   renderGasto(gasto);
+  renderChart();
 
   form.reset();
   descInput.focus();
@@ -40,4 +41,40 @@ function renderGasto(gasto) {
     `${gasto.descripcion} - $${gasto.monto.toFixed(2)} - ${gasto.categoria}`;
 
   list.appendChild(item);
+}
+
+const chartCanvas = document.getElementById('expense-chart');
+const ctx = chartCanvas.getContext('2d');
+
+function renderChart() {
+  ctx.clearRect(0, 0, chartCanvas.width, chartCanvas.height);
+
+  // Agrupa el total gastado por categoría
+  const totales = {};
+  gastos.forEach(g => {
+    totales[g.categoria] = (totales[g.categoria] || 0) + g.monto;
+  });
+
+  const categorias = Object.keys(totales);
+  if (categorias.length === 0) return;
+
+  const maxTotal = Math.max(...Object.values(totales));
+  const barWidth = chartCanvas.width / categorias.length;
+  const chartHeight = chartCanvas.height - 40;
+
+  categorias.forEach((cat, i) => {
+    const valor = totales[cat];
+    const barHeight = (valor / maxTotal) * chartHeight;
+    const x = i * barWidth + 10;
+    const y = chartCanvas.height - barHeight - 20;
+
+    ctx.fillStyle = '#2575fc';
+    ctx.fillRect(x, y, barWidth - 20, barHeight);
+
+    ctx.fillStyle = '#222';
+    ctx.font = '11px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(cat, x + (barWidth - 20) / 2, chartCanvas.height - 5);
+    ctx.fillText(`$${valor.toFixed(0)}`, x + (barWidth - 20) / 2, y - 5);
+  });
 }
