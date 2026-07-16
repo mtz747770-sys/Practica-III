@@ -6,6 +6,7 @@ const descInput = document.getElementById('expense-desc');
 const amountInput = document.getElementById('expense-amount');
 const list = document.getElementById('expense-list');
 const categoriaInput = document.getElementById('categoria');
+const fechaInput = document.getElementById('fecha');
 
 form.addEventListener('submit', (e) => {
   e.preventDefault();
@@ -13,8 +14,15 @@ form.addEventListener('submit', (e) => {
   const descripcion = descInput.value.trim();
   const monto = parseFloat(amountInput.value);
   const categoria = categoriaInput.value;
+  const fecha = fechaInput.value;
 
-  if (!descripcion || isNaN(monto) || monto <= 0 || categoria === '') {
+  if (
+    !descripcion ||
+    isNaN(monto) ||
+    monto <= 0 ||
+    categoria === '' ||
+    fecha === ''
+  ) {
     return;
   }
 
@@ -22,7 +30,8 @@ form.addEventListener('submit', (e) => {
     id: Date.now(),
     descripcion,
     monto,
-    categoria
+    categoria,
+    fecha
   };
 
   gastos.push(gasto);
@@ -38,7 +47,7 @@ function renderGasto(gasto) {
 
   item.dataset.id = gasto.id;
   item.textContent =
-    `${gasto.descripcion} - $${gasto.monto.toFixed(2)} - ${gasto.categoria}`;
+    `${gasto.descripcion} - $${gasto.monto.toFixed(2)} - ${gasto.categoria} - ${gasto.fecha}`;
 
   list.appendChild(item);
 }
@@ -51,11 +60,13 @@ function renderChart() {
 
   // Agrupa el total gastado por categoría
   const totales = {};
+
   gastos.forEach(g => {
     totales[g.categoria] = (totales[g.categoria] || 0) + g.monto;
   });
 
   const categorias = Object.keys(totales);
+
   if (categorias.length === 0) return;
 
   const maxTotal = Math.max(...Object.values(totales));
