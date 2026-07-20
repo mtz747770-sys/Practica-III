@@ -55,7 +55,8 @@ function obtenerGastosFiltrados(filtro) {
   return gastos.filter(g => {
     const fechaGasto = new Date(g.fecha + 'T00:00:00');
  
-    if (filtro = 'hoy') {
+    // CORRECCIÓN: Se cambió "=" por "==="
+    if (filtro === 'hoy') {
       return fechaGasto.getTime() === hoy.getTime();
     } else if (filtro === 'semana') {
       const inicioSemana = new Date(hoy);
@@ -118,20 +119,30 @@ function renderChart(gastosAMostrar = gastos) {
   const barWidth = chartCanvas.width / categorias.length;
   const chartHeight = chartCanvas.height - 40;
  
+  // MEJORA VISUAL: Paleta de colores para las gráficas
+  const colores = ['#ff6384', '#36a2eb', '#ffce56', '#4bc0c0', '#9966ff', '#ff9f40', '#8ac926'];
+
   categorias.forEach((cat, i) => {
     const valor = totales[cat];
     const barHeight = (valor / maxTotal) * chartHeight;
     const x = i * barWidth + 10;
     const y = chartCanvas.height - barHeight - 20;
  
-    ctx.fillStyle = '#2575fc';
+    // Aplicamos un color distinto para cada categoría
+    ctx.fillStyle = colores[i % colores.length];
     ctx.fillRect(x, y, barWidth - 20, barHeight);
  
-    ctx.fillStyle = '#222';
-    ctx.font = '11px Arial';
+    // Estilos del texto
+    ctx.fillStyle = '#333333';
+    ctx.font = 'bold 12px sans-serif';
     ctx.textAlign = 'center';
+    
+    // Nombre de la categoría
     ctx.fillText(cat, x + (barWidth - 20) / 2, chartCanvas.height - 5);
+    
+    // Valor monetario
+    ctx.fillStyle = '#666666';
+    ctx.font = '11px sans-serif';
     ctx.fillText(`$${valor.toFixed(0)}`, x + (barWidth - 20) / 2, y - 5);
   });
 }
- 
